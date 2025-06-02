@@ -332,14 +332,14 @@
                 }
             }
             
-            // Lines - simple and accurate counting
-            let lineCount = 1; // Start with 1 line
+            // Fixed line counting logic
+            let lineCount = 0;
             if (text === '') {
                 lineCount = 0; // Empty textarea has 0 lines
             } else {
-                // Count how many newline characters exist and add 1
-                const newlines = text.split('\n').length - 1;
-                lineCount = newlines + 1;
+                // Count lines by splitting on newlines
+                const lines = text.split('\n');
+                lineCount = lines.length;
             }
             
             // Reading time (average 200 words per minute)
@@ -452,25 +452,22 @@
                 // Clear the textarea
                 textInput.value = '';
                 
-                // Manually set all stats to 0 immediately
-                stats.charCount.textContent = '0';
-                stats.charNoSpaceCount.textContent = '0';
-                stats.wordCount.textContent = '0';
-                stats.sentenceCount.textContent = '0';
-                stats.paragraphCount.textContent = '0';
-                stats.lineCount.textContent = '0';
-                stats.readingTime.textContent = '0';
-                stats.averageWordsPerSentence.textContent = '0';
+                // Reset the case toggle state
+                isUpperCase = false;
                 
-                // Hide word frequency
-                document.getElementById('wordFrequency').style.display = 'none';
+                // Trigger the updateStats function to properly recalculate everything
+                updateStats();
                 
                 // Focus back to textarea
                 textInput.focus();
                 
-                // Show feedback
-                if (typeof event !== 'undefined' && event && event.target) {
-                    showFeedback(event.target, 'Cleared!', '#dc3545');
+                // Show feedback (use a try-catch to handle potential event issues)
+                try {
+                    if (typeof event !== 'undefined' && event && event.target) {
+                        showFeedback(event.target, 'Cleared!', '#dc3545');
+                    }
+                } catch (e) {
+                    // Silently handle any event-related errors
                 }
             }
         }
